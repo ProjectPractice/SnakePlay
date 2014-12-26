@@ -36,7 +36,7 @@ function love.load()
    wormCharacter.name = "worm"
    wormCharacter.rad = 15
 
-   love.graphics.setNewFont(20) -- debug message font
+   love.graphics.setNewFont('xfiles.ttf', 20) -- debug message font
    love.graphics.setColor(0,0,0)
 
    --love.graphics.circle("fill", 300, 300, 50, 5)
@@ -59,8 +59,6 @@ function love.draw()
 
    love.graphics.print("delta-X: "..(math.abs(snakeCharacter.x - wormCharacter.x)), debug.dDeltaX.x, debug.dDeltaX.y)    
    love.graphics.print("delta-Y: "..(math.abs(snakeCharacter.y - wormCharacter.y)), debug.dDeltaY.x, debug.dDeltaY.y)  
-
-   --love.graphics.print(wormCharacter.name.." pos: ("..wormCharacter.x..",  "..wormCharacter.y..")", 300, 400)
    
    love.graphics.rotate(angle)
    love.graphics.setColor(0,0,0)
@@ -81,15 +79,15 @@ function love.update(dt)
       snakeCharacter.x = snakeCharacter.x - steps * dt
    end
    
-   if( (math.abs(snakeCharacter.x - wormCharacter.x) <= tolerance) and 
-      (math.abs(snakeCharacter.y - wormCharacter.y) <= tolerance) ) then
-      updateCharacters();
-   end
-
    if love.keyboard.isDown('up') then
       snakeCharacter.y = snakeCharacter.y - steps * dt
    elseif love.keyboard.isDown('down') then
       snakeCharacter.y = snakeCharacter.y + steps * dt
+   end
+
+   if( (math.abs(snakeCharacter.x - wormCharacter.x) <= tolerance) and 
+      (math.abs(snakeCharacter.y - wormCharacter.y) <= tolerance) ) then
+      updateCharacters();
    end
 
 end
@@ -125,7 +123,7 @@ function updateSnake()
 end
 
 ----------------------------------------------------------------------------------
--- @description respawns  the worm after it has been eaten by the snake
+-- @description respawns the worm after it has been eaten by the snake
 ----------------------------------------------------------------------------------
 function updateWorm()
    wormCharacter.x = love.math.random(0, 800-width)
