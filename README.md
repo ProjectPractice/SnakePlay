@@ -1,4 +1,4 @@
 SnakePlay
 =========
 
-an online snake game using lua.
+Snake game using LÖVE framework based on Lua.
