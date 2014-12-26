@@ -1,4 +1,6 @@
 
+io.stdout:setvbuf("no")
+
 -- library imports
 local rectangle = love.graphics.rectangle
 
@@ -17,6 +19,7 @@ local debug      = {
                      dDeltaY = { x = 10, y = 60}
                    }
 
+local wormEatenSound
 
 
 ----------------------------------------------------------------------------------
@@ -42,6 +45,8 @@ function love.load()
    --love.graphics.circle("fill", 300, 300, 50, 5)
 
    love.graphics.setBackgroundColor(100,200,100)
+
+   wormEatenSound = love.audio.newSource("menu-interface-confirm.wav", "static")
 
 end
 
@@ -87,6 +92,7 @@ function love.update(dt)
 
    if( (math.abs(snakeCharacter.x - wormCharacter.x) <= tolerance) and 
       (math.abs(snakeCharacter.y - wormCharacter.y) <= tolerance) ) then
+      wormEatenSound:play()
       updateCharacters();
    end
 
