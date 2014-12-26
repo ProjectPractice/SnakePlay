@@ -19,8 +19,14 @@ local debug      = {
                      dDeltaY = { x = 10, y = 60}
                    }
 
+
+local debugMode = false  -- to view debug info on the game play screen
+
+local soundMode = true   -- to play sound or silent game play
 local wormEatenSound
 
+local soundOnIcon
+local soundOffIcon
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
@@ -47,40 +53,45 @@ function love.load()
    love.graphics.setBackgroundColor(100,200,100)
 
    wormEatenSound = love.audio.newSource("menu-interface-confirm.wav", "static")
+   soundOnIcon    = love.graphics.newImage("Sound-On.png")
+   soundOffIcon   = love.graphics.newImage("Sound-Off.png")
 
 end
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
 function love.draw()
-
    love.graphics.setColor(255, 255, 255) 
    rectangle("fill", wormCharacter.x, wormCharacter.y, width, height)
 
-   --love.graphics.draw(image, imgx, imgy)
-   --love.graphics.print("Click and drag the cake around or use the arrow keys", 10, 10)
-   love.graphics.print(snakeCharacter.name.." pos: ("..snakeCharacter.x..",  "..snakeCharacter.y..")", debug.dSnake.x, debug.dSnake.y)
-   love.graphics.print(wormCharacter.name.." pos: ("..wormCharacter.x..",  "..wormCharacter.y..")", debug.dWorm.x, debug.dWorm.y)
+   if soundMode == true then
+      love.graphics.draw(soundOnIcon, 750, 10)  --TODO: not use absolute co-ordinate values
+   else
+      love.graphics.draw(soundOffIcon, 750, 10)
+   end
+ 
+   if debugMode then
+      love.graphics.print(snakeCharacter.name.." pos: ("..snakeCharacter.x..",  "..snakeCharacter.y..")", debug.dSnake.x, debug.dSnake.y)
+      love.graphics.print(wormCharacter.name.." pos: ("..wormCharacter.x..",  "..wormCharacter.y..")", debug.dWorm.x, debug.dWorm.y)
 
-   love.graphics.print("delta-X: "..(math.abs(snakeCharacter.x - wormCharacter.x)), debug.dDeltaX.x, debug.dDeltaX.y)    
-   love.graphics.print("delta-Y: "..(math.abs(snakeCharacter.y - wormCharacter.y)), debug.dDeltaY.x, debug.dDeltaY.y)  
+      love.graphics.print("delta-X: "..(math.abs(snakeCharacter.x - wormCharacter.x)), debug.dDeltaX.x, debug.dDeltaX.y)      
+      love.graphics.print("delta-Y: "..(math.abs(snakeCharacter.y - wormCharacter.y)), debug.dDeltaY.x, debug.dDeltaY.y)  
+   end
    
-   love.graphics.rotate(angle)
+   --love.graphics.rotate(angle)
    love.graphics.setColor(0,0,0)
-   rectangle("fill", snakeCharacter.x, snakeCharacter.y, snakeCharacter.width, snakeCharacter.height)  
-
+   rectangle("fill", snakeCharacter.x, snakeCharacter.y, snakeCharacter.width, snakeCharacter.height)
 end
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
 function love.update(dt)
+
    --on pressing the 'right arrow' key, rotate to the right
    if love.keyboard.isDown('right') then
-      --angle = angle + math.pi * dt
       snakeCharacter.x = snakeCharacter.x + steps * dt
    -- else if we press 'left arrow', rotate to the left
    elseif love.keyboard.isDown('left') then
-      --angle = angle - math.pi * dt
       snakeCharacter.x = snakeCharacter.x - steps * dt
    end
    
@@ -92,10 +103,32 @@ function love.update(dt)
 
    if( (math.abs(snakeCharacter.x - wormCharacter.x) <= tolerance) and 
       (math.abs(snakeCharacter.y - wormCharacter.y) <= tolerance) ) then
-      wormEatenSound:play()
+      
+      if soundMode  == true then
+         wormEatenSound:play() -- give acoustic feedback to the player
+      end
+
+      -- core update operation here
       updateCharacters();
+
    end
 
+end
+
+function love.keypressed(key)
+   --space key toggles sound
+   if key == ' ' then  
+      if soundMode == false then
+         soundMode = true
+      else 
+         soundMode = false
+      end
+   end
+
+   --esacpe key quits the game
+   if key == 'escape' then
+      love.event.quit()
+   end
 end
 
 ----------------------------------------------------------------------------------
@@ -118,8 +151,11 @@ end
 function updateCharacters()
    updateWorm()
    updateSnake()
-   updateCoordDisplay(snakeCharacter)
-   updateCoordDisplay(wormCharacter)
+
+   if debugMode == "true" then
+      updateCoordDisplay(snakeCharacter)
+      updateCoordDisplay(wormCharacter)
+   end
 end
 
 ----------------------------------------------------------------------------------
