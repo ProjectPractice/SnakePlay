@@ -28,6 +28,15 @@ local wormEatenSound
 local soundOnIcon
 local soundOffIcon
 
+local bg    --the background image
+local food = {
+               strawberry = {imgname = "strawberry_0.png"}
+             }
+
+local fStrawberry
+local fStrawberryWidth
+local fStrawberryHeight
+
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
 function love.load()
@@ -50,24 +59,35 @@ function love.load()
 
    --love.graphics.circle("fill", 300, 300, 50, 5)
 
-   love.graphics.setBackgroundColor(100,200,100)
+   --love.graphics.setBackgroundColor(100,20,100)   -- the background screen of the game
 
    wormEatenSound = love.audio.newSource("menu-interface-confirm.wav", "static")
    soundOnIcon    = love.graphics.newImage("Sound-On.png")
    soundOffIcon   = love.graphics.newImage("Sound-Off.png")
+
+   bg = love.graphics.newImage("jungle-background.jpg")
+
+
+   fStrawberry = love.graphics.newImage(food.strawberry.imgname)
+   fStrawberryWidth = fStrawberry:getWidth()
+   fStrawberryHeight = fStrawberry:getHeight()
 
 end
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
 function love.draw()
-   love.graphics.setColor(255, 255, 255) 
-   rectangle("fill", wormCharacter.x, wormCharacter.y, width, height)
+   love.graphics.setColor(255,200,0)
+
+   love.graphics.draw(bg)
+
+   --rectangle("fill", wormCharacter.x, wormCharacter.y, width, height)
+   love.graphics.draw(fStrawberry, wormCharacter.x, wormCharacter.y, math.rad(0), 0.1, 0.1, fStrawberryWidth/5, fStrawberryHeight/5)
 
    if soundMode == true then
-      love.graphics.draw(soundOnIcon, 750, 10)  --TODO: not use absolute co-ordinate values
+      love.graphics.draw(soundOnIcon, 1040, 10)  --TODO: not use absolute co-ordinate values
    else
-      love.graphics.draw(soundOffIcon, 750, 10)
+      love.graphics.draw(soundOffIcon, 1040, 10)
    end
  
    if debugMode then
@@ -79,7 +99,7 @@ function love.draw()
    end
    
    --love.graphics.rotate(angle)
-   love.graphics.setColor(0,0,0)
+   love.graphics.setColor(255, 255, 255)    
    rectangle("fill", snakeCharacter.x, snakeCharacter.y, snakeCharacter.width, snakeCharacter.height)
 end
 
@@ -168,8 +188,8 @@ end
 -- @description respawns the worm after it has been eaten by the snake
 ----------------------------------------------------------------------------------
 function updateWorm()
-   wormCharacter.x = love.math.random(0, 800-width)
-   wormCharacter.y = love.math.random(0, 600-height)
+   wormCharacter.x = love.math.random(0, 1095-width)
+   wormCharacter.y = love.math.random(0, 730-height)
 end
 
 ----------------------------------------------------------------------------------
